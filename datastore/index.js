@@ -26,20 +26,6 @@ exports.create = (text, callback) => {
   // callback(null, { id, text });
 };
 
-// exports.readAll = (callback) => {
-//   var data = [];
-//   fs.readdir(exports.dataDir, (err, files) => {
-//     for (let i = 0; i < files.length; i++) {
-//       console.log(files, typeof files);
-//       let tempFile = {
-//         id: files[i].split('.')[0],
-//         text: files[i].split('.')[0]
-//       };
-//       data.push(tempFile);
-//     }
-//     callback(null, data);
-//   });
-// };
 let readdirAsync = Promise.promisify(fs.readdir);
 let readFileAsync = Promise.promisify(fs.readFile);
 // exports.dataDir + '/' + id + '.txt', (err, fileData)
@@ -48,7 +34,7 @@ exports.readAll = (callback) => {
     .then(files => {
       var promiseArr = [];
       if (files.length === 0) {
-        return [];
+        return callback(null, []);
       }
       for (let i = 0; i < files.length; i++) {
         promiseArr.push(readFileAsync(exports.dataDir + '/' + files[i])
@@ -63,41 +49,12 @@ exports.readAll = (callback) => {
       }
       Promise.all(promiseArr)
         .then((values) => {
-          console.log(typeof values, values, 'inside promise all');
-          return values;
+          callback(null, values);
         });
-      // for (let i = 0; i < files.length; i++) {
-      //   debugger;
-      //   readFileAsync(exports.dataDir + '/' + files[i])
-      // .then(fileData => {
-      //   let tempFile = {
-      //     id: files[i].split('.')[0],
-      //     text: fileData.toString()
-      //   };
-      //   data.push(tempFile);
-      //   // callback(null, data);
-      //   // console.log(data);
-      //   // return (data)
-      // })
-      //     .catch(err => err);
-      // }
+
     });
 };
-//     , (err, files) => {
-//     for (let i = 0; i < files.length; i++) {
-//       console.log(files, typeof files);
-//       // to Jacky:
-//       // run exports.readOne on each file
 
-//       let tempFile = {
-//         id: files[i].split('.')[0],
-//         text: files[i].split('.')[0]
-//       };
-//       data.push(tempFile);
-//     }
-//     callback(null, data);
-//   });
-// };
 
 exports.readOne = (id, callback) => {
   // var text = items[id];
@@ -135,15 +92,6 @@ exports.delete = (id, callback) => {
     }
   });
 
-
-  // var item = items[id];
-  // delete items[id];
-  // if (!item) {
-  //   // report an error if item not found
-  //   callback(new Error(`No item with id: ${id}`));
-  // } else {
-  //   callback();
-  // }
 };
 
 
